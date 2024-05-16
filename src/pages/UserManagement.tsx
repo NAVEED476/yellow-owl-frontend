@@ -160,6 +160,7 @@ const UserManagement = () => {
 
   useEffect(() => {
     fetchStudents();
+    console.log(editStudent)
   }, []);
 
   return (
