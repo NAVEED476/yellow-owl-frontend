@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
@@ -11,22 +11,7 @@ interface Student {
   dateOfAdmission: string;
 }
 
-const initialStudents: Student[] = [
-  {
-    name: "Karthi",
-    email: "karthi@gmail.com",
-    phone: "7305477760",
-    enrollNumber: "123456730547776",
-    dateOfAdmission: "08-Dec-2021",
-  },
-  {
-    name: "Karthi123456730547776",
-    email: "karthi@gmail.com 123456730547776",
-    phone: "7305477760123456730547776",
-    enrollNumber: "123456730547776123456730547776",
-    dateOfAdmission: "08-Dec-2021123456730547776",
-  },
-];
+
 
 const UserManagement = () => {
   const [students, setStudents] = useState<Student[]>(initialStudents);
@@ -51,6 +36,7 @@ const UserManagement = () => {
     setShowAddModal(false);
     setShowEditModal(false);
     setNewStudent({
+      id: "",
       name: "",
       email: "",
       phone: "",
@@ -60,9 +46,28 @@ const UserManagement = () => {
     setEditStudent(null);
   };
 
-  const handleSubmit = () => {
-    setStudents([...students, newStudent]);
-    handleCloseModal();
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:7000/api/students/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newStudent),
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setStudents([...students, data]);
+        handleCloseModal();
+      } else {
+        // Handle errors
+      }
+    } catch (error) {
+      console.error("Error adding student:", error);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,13 +79,32 @@ const UserManagement = () => {
     setShowEditModal(true);
   };
 
-  const handleUpdateStudent = () => {
-    if (editStudent) {
-      const updatedStudents = students.map((student) =>
-        student === editStudent ? newStudent : student
-      );
-      setStudents(updatedStudents);
-      handleCloseModal();
+  const handleUpdateStudent = async () => {
+    try {
+      if (editStudent) {
+        const response = await fetch(
+          `http://localhost:7000/api/students/update/${editStudent.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newStudent),
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const updatedStudents = students.map((student) =>
+            student.id === editStudent.id ? data : student
+          );
+          setStudents(updatedStudents);
+          handleCloseModal();
+        } else {
+          // Handle errors
+        }
+      }
+    } catch (error) {
+      console.error("Error updating student:", error);
     }
   };
 
@@ -89,14 +113,28 @@ const UserManagement = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (studentToDelete) {
-      const updatedStudents = students.filter(
-        (student) => student !== studentToDelete
-      );
-      setStudents(updatedStudents);
-      setShowDeleteModal(false);
-      setStudentToDelete(null);
+  const handleConfirmDelete = async () => {
+    try {
+      if (studentToDelete) {
+        const response = await fetch(
+          `http://localhost:7000/api/students/delete/${studentToDelete.id}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (response.ok) {
+          const updatedStudents = students.filter(
+            (student) => student.id !== studentToDelete.id
+          );
+          setStudents(updatedStudents);
+          setShowDeleteModal(false);
+          setStudentToDelete(null);
+        } else {
+          // Handle errors
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting student:", error);
     }
   };
 
@@ -104,6 +142,11 @@ const UserManagement = () => {
     setShowDeleteModal(false);
     setStudentToDelete(null);
   };
+
+  useEffect(() => {
+    console.log(newStudent);
+  }, []);
+
   return (
     <div className="app">
       <header className="header">
@@ -164,11 +207,14 @@ const UserManagement = () => {
                 <td>{student.enrollNumber}</td>
                 <td>{student.dateOfAdmission}</td>
                 <td>
-                  <button className="edit" onClick={handleEditStudent}>
+                  <button
+                    className="edit"
+                    onClick={() => handleEditStudent(student)}
+                  >
                     <FaEdit className="edit" />
                   </button>
-                  <button onClick={handleDeleteStudent}>
-                    <MdDelete  className="delete-icon"/>
+                  <button onClick={() => handleDeleteStudent(student)}>
+                    <MdDelete className="delete-icon" />
                   </button>
                 </td>
               </tr>
@@ -268,7 +314,7 @@ const UserManagement = () => {
               onChange={handleInputChange}
             />
             <div className="modal-buttons">
-              <button className="submit" onClick={handleSubmit}>
+              <button className="submit" onClick={handleUpdateStudent}>
                 Submit
               </button>
               <button className="cancel" onClick={handleCloseModal}>

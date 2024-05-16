@@ -17,7 +17,7 @@
   width: 100%;
   height: 80vh;
   display: flex;
-  padding:15px 20px;
+  padding: 15px 20px;
   margin-right: 30px;
   align-items: flex-start;
   justify-content: flex-start;
@@ -79,25 +79,25 @@
   justify-content: space-between;
   margin: 10px;
   align-items: center;
-
 }
 
-.search-bar{
-    width: 250px;
-    background: white;
-    padding: 5px;
-    margin-right: 8px;
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+.search-bar {
+  width: 250px;
+  background: white;
+  padding: 5px;
+  margin-right: 8px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
-.add-new-btn{
-    background: #22C55E;
-    color: #FFFFFF;
-    padding: 10px 10px;
-    margin-left: 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
+.add-new-btn {
+  background: #22c55e;
+  color: #ffffff;
+  padding: 10px 10px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 table {
@@ -110,54 +110,52 @@ table {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 th,
 td {
   text-align: center;
   border-bottom: 1px solid #ddd;
-  background-color: #FFFFFF;
- overflow: hidden;
+  background-color: #ffffff;
+  overflow: hidden;
   font-size: 14px;
- 
 }
-td{
-    padding: 2px;
-    width: 180px;
+td {
+  padding: 2px;
+  width: 180px;
 }
-
 
 th {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: black;
   font-size: 14px;
   padding: 10px;
   width: 300px;
+  font-weight: 300;
 }
-tr{
-    padding: 4px;
+tr {
+  padding: 5px;
 }
 
 tr:hover {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
-.edit{
-    color: #84A7F4;
-    border: none;
-    cursor: pointer;
-    background: transparent;
+.edit {
+  color: #84a7f4;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  margin-right: 5px;
 }
 .delete-icon {
-    color: red;
-    border: none;
-    cursor: pointer;
-    background: white;
-    padding: 0;
+  color: red;
+  border: none;
+  cursor: pointer;
+  background: white;
+  padding: 0;
 }
-
-
 
 .modal {
   position: fixed;
