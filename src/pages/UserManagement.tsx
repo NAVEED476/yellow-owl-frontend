@@ -4,21 +4,22 @@ import { MdDelete } from "react-icons/md";
 
 import "./style.css";
 interface Student {
-  name: string;
-  email: string;
-  phone: string;
-  enrollNumber: string;
-  dateOfAdmission: string;
-}
-
-
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    enrollNumber: string;
+    dateOfAdmission: string;
+  }
+  
 
 const UserManagement = () => {
-  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [students, setStudents] = useState<Student[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newStudent, setNewStudent] = useState<Student>({
+    _id: "",
     name: "",
     email: "",
     phone: "",
@@ -36,7 +37,7 @@ const UserManagement = () => {
     setShowAddModal(false);
     setShowEditModal(false);
     setNewStudent({
-      id: "",
+      _id: "",
       name: "",
       email: "",
       phone: "",
@@ -44,6 +45,20 @@ const UserManagement = () => {
       dateOfAdmission: "",
     });
     setEditStudent(null);
+  };
+
+  const fetchStudents = async () => {
+    try {
+      const response = await fetch("http://localhost:7000/api/students/");
+      if (response.ok) {
+        const data = await response.json();
+        setStudents(data);
+      } else {
+        console.log("Fetching students failed");
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
   };
 
   const handleSubmit = async () => {
@@ -63,7 +78,7 @@ const UserManagement = () => {
         setStudents([...students, data]);
         handleCloseModal();
       } else {
-        // Handle errors
+        console.log("Submission to create new student failed");
       }
     } catch (error) {
       console.error("Error adding student:", error);
@@ -75,15 +90,15 @@ const UserManagement = () => {
   };
 
   const handleEditStudent = (student: Student) => {
-    setEditStudent(student);
+    setNewStudent(student);
     setShowEditModal(true);
   };
 
   const handleUpdateStudent = async () => {
     try {
-      if (editStudent) {
+      if (newStudent) {
         const response = await fetch(
-          `http://localhost:7000/api/students/update/${editStudent.id}`,
+          `http://localhost:7000/api/students/update/${newStudent._id}`,
           {
             method: "PUT",
             headers: {
@@ -95,12 +110,12 @@ const UserManagement = () => {
         if (response.ok) {
           const data = await response.json();
           const updatedStudents = students.map((student) =>
-            student.id === editStudent.id ? data : student
+            student._id === newStudent._id ? data : student
           );
           setStudents(updatedStudents);
           handleCloseModal();
         } else {
-          // Handle errors
+          console.log("Update operation failed");
         }
       }
     } catch (error) {
@@ -117,20 +132,20 @@ const UserManagement = () => {
     try {
       if (studentToDelete) {
         const response = await fetch(
-          `http://localhost:7000/api/students/delete/${studentToDelete.id}`,
+          `http://localhost:7000/api/students/delete/${studentToDelete._id}`,
           {
             method: "DELETE",
           }
         );
         if (response.ok) {
           const updatedStudents = students.filter(
-            (student) => student.id !== studentToDelete.id
+            (student) => student._id !== studentToDelete._id
           );
           setStudents(updatedStudents);
           setShowDeleteModal(false);
           setStudentToDelete(null);
         } else {
-          // Handle errors
+          console.log("Error during delete:", response.statusText);
         }
       }
     } catch (error) {
@@ -144,7 +159,7 @@ const UserManagement = () => {
   };
 
   useEffect(() => {
-    console.log(newStudent);
+    fetchStudents();
   }, []);
 
   return (
