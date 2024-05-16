@@ -28,6 +28,7 @@ const UserManagement = () => {
   });
   const [editStudent, setEditStudent] = useState<Student | null>(null);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleAddNewStudent = () => {
     setShowAddModal(true);
@@ -158,6 +159,14 @@ const UserManagement = () => {
     setStudentToDelete(null);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   useEffect(() => {
     fetchStudents();
     console.log(editStudent)
@@ -185,7 +194,13 @@ const UserManagement = () => {
             <h2>Students</h2>
           </div>
           <div>
-            <input className="search-bar" type="text" placeholder="Search..." />
+          <input
+              className="search-bar"
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
             <button className="add-new-btn" onClick={handleAddNewStudent}>
               ADD NEW STUDENT
             </button>
@@ -203,7 +218,7 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {students.map((student, index) => (
+            {filteredStudents.map((student, index) => (
               <tr key={index}>
                 <td
                   style={{

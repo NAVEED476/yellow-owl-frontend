@@ -21,7 +21,6 @@ interface AddModalProps {
       <div className="modal">
         <div className="modal-content">
           <h2>Add New Student</h2>
-          {/* Input fields for new student */}
           <div className="modal-buttons">
             <button className="submit" onClick={handleSubmit}>
               Submit

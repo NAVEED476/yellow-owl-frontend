@@ -21,7 +21,6 @@ interface EditModalProps {
       <div className="modal">
         <div className="modal-content">
           <h2>Edit Student</h2>
-          {/* Input fields for editing student */}
           <div className="modal-buttons">
             <button className="submit" onClick={handleUpdateStudent}>
               Submit
